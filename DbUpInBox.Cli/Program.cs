@@ -39,7 +39,6 @@ catch(ArgumentException ex)
     return -1;
 }
 
-
 var scriptsPath = string.Empty;
 while (scriptsPath.IsNullOrEmpty())
 {
@@ -69,46 +68,6 @@ catch (ArgumentException ex)
 catch(DbException ex)
 {
     logger.LogError(ex, $"{Messages.MIGRATION_ERROR} {Messages.CONNECTION_STRING_ERROR}", new[] {connectionString});
-    return -1;
-}
-
-Console.WriteLine("Do you want to run seeds? (Y/N)");
-var key = Console.ReadLine();
-if (key is null || !key.Equals("Y", StringComparison.CurrentCultureIgnoreCase))
-    return 0;
-
-Console.Clear();
-Console.WriteLine(Messages.TITLE);
-
-var seedPath = string.Empty;
-while (seedPath.IsNullOrEmpty())
-{
-    Console.WriteLine("Paste the path to seeds:");
-    seedPath = Console.ReadLine()?? string.Empty;
-}
-
-try
-{
-    migrator.Seed(seedPath);
-}
-catch(DirectoryNotFoundException ex)
-{
-    logger.LogError(ex, Messages.DIRECTORY_ERROR, new[]{ scriptsPath });
-    return -1;
-}
-catch (SocketException ex)
-{
-    logger.LogError(ex, $"{Messages.SEED_ERROR} {Messages.CONNECTION_ERROR}",  new[] {connectionString});
-    return -1;
-}
-catch (ArgumentException ex)
-{
-    logger.LogError(ex, $"{Messages.SEED_ERROR} {Messages.CONNECTION_STRING_ERROR}",  new[] {connectionString});
-    return -1;
-}
-catch(DbException ex)
-{
-    logger.LogError(ex, $"{Messages.SEED_ERROR}");
     return -1;
 }
 
