@@ -1,7 +1,5 @@
-#   vs code
+# VS Code
 .vscode/
 
-# dotnet
+# Dotnet
 artifacts/
-**/bin/
-**/obj/
