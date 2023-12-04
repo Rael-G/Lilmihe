@@ -15,14 +15,14 @@ public class PostgresqlMigrator(ILogger logger, string connectionString) : DbMig
             var upgrader = DeployChanges.To
                 .PostgresqlDatabase(connectionString)
                 .WithScriptsFromFileSystem(scriptsPath)
-                .LogToConsole()
+                .LogToNowhere()
                 .Build();
 
             return upgrader.PerformUpgrade();
         }
         catch(Npgsql.PostgresException ex)
         {
-           throw new DbConnectionException(ex.Message);
+           throw new DbException(ex.Message);
         }
         
     }
