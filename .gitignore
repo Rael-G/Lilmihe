@@ -2,6 +2,6 @@
 .vscode/
 
 # dotnet
-.artifacts/
+artifacts/
 **/bin/
 **/obj/
