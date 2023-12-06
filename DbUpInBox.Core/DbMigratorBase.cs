@@ -3,7 +3,7 @@ using DbUp.Engine;
 
 namespace DbUpInBox;
 
-public abstract class DbMigrator(ILogger logger, string connectionString)
+public abstract class DbMigratorBase(ILogger logger, string connectionString) : IDbMigrator
 {
     public string ConnectionString { get; set; } = connectionString;
     public ILogger _logger { get; set; } = logger;
