@@ -28,7 +28,7 @@ using ILoggerFactory factory = LoggerFactory.Create(builder => builder.AddConsol
 ILogger logger = factory.CreateLogger("DbUpInBox");
 factory.Dispose();
 
-DbMigrator migrator;
+IDbMigrator migrator;
 try
 {
     migrator = MigratorInjector.Inject(connectionString, dbms, logger);

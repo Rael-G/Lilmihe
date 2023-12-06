@@ -4,7 +4,7 @@ namespace DbUpInBox;
 
 public static class MigratorInjector
 {
-    public static DbMigrator Inject(string connectionString, string dbms, ILogger logger)
+    public static IDbMigrator Inject(string connectionString, string dbms, ILogger logger)
     { 
         return dbms switch
         {

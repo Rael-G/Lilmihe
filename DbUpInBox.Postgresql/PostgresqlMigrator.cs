@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 
 namespace DbUpInBox;
 
-public class PostgresqlMigrator(ILogger logger, string connectionString) : DbMigrator(logger, connectionString)
+public class PostgresqlMigrator(ILogger logger, string connectionString) : DbMigratorBase(logger, connectionString)
 {
     protected override DbUp.Engine.DatabaseUpgradeResult ExecuteMigration
         (string connectionString, string scriptsPath)
