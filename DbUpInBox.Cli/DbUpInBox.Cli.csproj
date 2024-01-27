@@ -15,6 +15,7 @@
   <ItemGroup>
     <ProjectReference Include="..\DbUpInBox.Core\DbUpInBox.Core.csproj" />
     <ProjectReference Include="..\DbUpInBox.Postgresql\DbUpInBox.Postgresql.csproj" />
+    <ProjectReference Include="..\DbUpInBox.SqlServer\DbUpInBox.SqlServer.csproj" />
   </ItemGroup>
 
 </Project>

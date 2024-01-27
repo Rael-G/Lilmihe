@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbUpInBox.Core", "DbUpInBox
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbUpInBox.Postgresql", "DbUpInBox.Postgresql\DbUpInBox.Postgresql.csproj", "{00BD9F3F-23F0-4612-BC07-F626BE313E21}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbUpInBox.SqlServer", "DbUpInBox.SqlServer\DbUpInBox.SqlServer.csproj", "{30487BF7-AE22-4CBF-BECA-D893FD846602}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{00BD9F3F-23F0-4612-BC07-F626BE313E21}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{00BD9F3F-23F0-4612-BC07-F626BE313E21}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{00BD9F3F-23F0-4612-BC07-F626BE313E21}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30487BF7-AE22-4CBF-BECA-D893FD846602}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30487BF7-AE22-4CBF-BECA-D893FD846602}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30487BF7-AE22-4CBF-BECA-D893FD846602}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30487BF7-AE22-4CBF-BECA-D893FD846602}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

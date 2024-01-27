@@ -17,7 +17,7 @@ var dbms = string.Empty;
 while (dbms.IsNullOrEmpty())
 {
     Console.WriteLine("Type your DBMS:");
-    Console.WriteLine("Options are <postgresql>");
+    Console.WriteLine("Options are <postgresql> <sqlserver>");
     dbms = Console.ReadLine()?? string.Empty;
 }
 

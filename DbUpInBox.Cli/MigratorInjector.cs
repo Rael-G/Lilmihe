@@ -9,8 +9,9 @@ public static class MigratorInjector
         return dbms switch
         {
             "postgresql" => new PostgresqlMigrator(logger, connectionString),
+            "sqlserver" => new SqlServerMigrator(logger, connectionString),
             _ => throw new ArgumentException
-                (@"DBMS is invalid. Please provide a valid DataBase Management System name as an argument."),
+                ($@"{dbms} is an invalid DBMS option. Please provide a valid DataBase Management System name as an argument."),
         };
     }
 }
