@@ -14,6 +14,8 @@ public abstract class DbMigratorBase(ILogger logger, string connectionString) : 
 
         if (result.Successful)
             _logger.LogInformation(MIGRATION_SUCCESS);
+        else if (result.Error.GetType() == typeof(DirectoryNotFoundException))
+            throw result.Error;
         else
             throw new DbException($"DB exception has occurred in script '{result.ErrorScript.Name}'\n{result.Error}");
     }

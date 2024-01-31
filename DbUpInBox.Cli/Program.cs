@@ -52,22 +52,22 @@ try
 }
 catch(DirectoryNotFoundException ex)
 {
-    logger.LogError(ex, Messages.DIRECTORY_ERROR, new[]{ scriptsPath });
+    logger.LogError(Messages.DIRECTORY_ERROR + ex.Message, new[]{ scriptsPath });
     return -1;
 }
-catch (SocketException ex)
+catch (SocketException)
 {
-    logger.LogError(ex, $"{Messages.MIGRATION_ERROR} {Messages.CONNECTION_ERROR}",  new[] {connectionString});
+    logger.LogError($"{Messages.MIGRATION_ERROR} {Messages.CONNECTION_ERROR}",  new[] {connectionString});
     return -1;
 }
-catch (ArgumentException ex)
+catch (ArgumentException)
 {
-    logger.LogError(ex, $"{Messages.MIGRATION_ERROR} {Messages.CONNECTION_STRING_ERROR}",  new[] {connectionString});
+    logger.LogError($"{Messages.MIGRATION_ERROR} {Messages.CONNECTION_STRING_ERROR}",  new[] {connectionString});
     return -1;
 }
-catch(DbException ex)
+catch(DbException)
 {
-    logger.LogError(ex, $"{Messages.MIGRATION_ERROR} {Messages.CONNECTION_STRING_ERROR}", new[] {connectionString});
+    logger.LogError($"{Messages.MIGRATION_ERROR} {Messages.CONNECTION_STRING_ERROR}", new[] {connectionString});
     return -1;
 }
 
