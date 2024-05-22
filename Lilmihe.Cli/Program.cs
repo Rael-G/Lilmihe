@@ -1,20 +1,10 @@
-﻿using System.Net.Sockets;
-using Lilmihe;
+﻿using Lilmihe;
 using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Tokens;
 
 Console.Clear();
 Console.WriteLine(Messages.TITLE);
-var connectionString = string.Empty;
-while(connectionString.IsNullOrEmpty())
-{
-    Console.WriteLine("Paste your Connection String:");
-    connectionString = Console.ReadLine()?? string.Empty;
-}
-Console.Clear();
-Console.WriteLine(Messages.TITLE);
 var dbms = string.Empty;
-while (dbms.IsNullOrEmpty())
+while (string.IsNullOrEmpty(dbms))
 {
     Console.WriteLine("Type your DBMS:");
     Console.WriteLine("Options are <postgresql> <sqlserver>");
@@ -23,6 +13,21 @@ while (dbms.IsNullOrEmpty())
 
 Console.Clear();
 Console.WriteLine(Messages.TITLE);
+var connectionString = string.Empty;
+while(string.IsNullOrEmpty(connectionString))
+{
+    Console.WriteLine("Paste your Connection String:");
+    connectionString = Console.ReadLine()?? string.Empty;
+}
+
+Console.Clear();
+Console.WriteLine(Messages.TITLE);
+var scriptsPath = string.Empty;
+while (string.IsNullOrEmpty(scriptsPath))
+{
+    Console.WriteLine("Paste the path to scripts:");
+    scriptsPath = Console.ReadLine()?? string.Empty;
+}
 
 using ILoggerFactory factory = LoggerFactory.Create(builder => builder.AddConsole());
 ILogger logger = factory.CreateLogger("DbUpInBox");
@@ -31,7 +36,7 @@ factory.Dispose();
 IDbMigrator migrator;
 try
 {
-    migrator = MigratorInjector.Inject(connectionString, dbms, logger);
+    migrator = MigratorInjector.Inject(dbms, connectionString, scriptsPath);
 }
 catch(ArgumentException ex)
 {
@@ -39,35 +44,42 @@ catch(ArgumentException ex)
     return -1;
 }
 
-var scriptsPath = string.Empty;
-while (scriptsPath.IsNullOrEmpty())
+var result = await migrator.Migrate();
+
+var successMessage = string.Empty;
+var failMessage = string.Empty;
+if (result.Success || result.SuccessFiles.Length > 0)
+    successMessage += Messages.MIGRATION_SUCCESS + "\n";
+
+if (result.SuccessFiles.Length > 0)
 {
-    Console.WriteLine("Paste the path to scripts:");
-    scriptsPath = Console.ReadLine()?? string.Empty;
+    successMessage += "Scripts:\n";
+    foreach (var file in result.SuccessFiles)
+    {
+        successMessage += file + "\n";
+    }
+    successMessage += "\n";
+}
+else if (result.Success)
+{
+    successMessage += result.Message +="\n";
 }
 
-try
+if (!string.IsNullOrEmpty(successMessage))
+    logger.LogInformation(successMessage);
+
+if(!result.Success)
 {
-    migrator.Migrate(scriptsPath);
+    failMessage +=  Messages.MIGRATION_ERROR + "\n";
+    failMessage += result.Message + "\n";
+    failMessage += (result.FailedFile != null)? "Failed File:\n" + result.FailedFile : string.Empty;
+    failMessage += (result.FailedCommand != null)? "Failed Command:\n" + result.FailedCommand : string.Empty;
+    failMessage += (result.Error != null)? "Error:\n" + result.Error.Message : string.Empty;
 }
-catch(DirectoryNotFoundException ex)
+
+if (!string.IsNullOrEmpty(failMessage))
 {
-    logger.LogError(Messages.DIRECTORY_ERROR + ex.Message, new[]{ scriptsPath });
-    return -1;
-}
-catch (SocketException)
-{
-    logger.LogError($"{Messages.MIGRATION_ERROR} {Messages.CONNECTION_ERROR}",  new[] {connectionString});
-    return -1;
-}
-catch (ArgumentException)
-{
-    logger.LogError($"{Messages.MIGRATION_ERROR} {Messages.CONNECTION_STRING_ERROR}",  new[] {connectionString});
-    return -1;
-}
-catch(DbException)
-{
-    logger.LogError($"{Messages.MIGRATION_ERROR} {Messages.CONNECTION_STRING_ERROR}", new[] {connectionString});
+    logger.LogError(failMessage);
     return -1;
 }
 
