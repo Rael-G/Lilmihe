@@ -6,15 +6,15 @@ namespace Lilmihe;
 
 public abstract class MigrationHelperBase : IDbMigrator
 {
-    private readonly string MigrationsPath;
+    protected readonly string ConnectionString;
 
-    private readonly string ConnectionString;
+    private readonly string ScriptsPath;
 
     private readonly MigrationResult Result = new();
 
-    public MigrationHelperBase(string migrationsPath, string connectionString)
+    public MigrationHelperBase(string scriptsPath, string connectionString)
     {
-        MigrationsPath = migrationsPath;
+        ScriptsPath = scriptsPath;
         ConnectionString = connectionString;
     }
 
@@ -22,11 +22,11 @@ public abstract class MigrationHelperBase : IDbMigrator
     {
         using var connection = CreateConnection();
 
-        var files = Directory.GetFiles(MigrationsPath, "*.sql");
+        var files = Directory.GetFiles(ScriptsPath, "*.sql");
         Array.Sort(files);
         if (files.Length < 1)
         {
-            Result.Message = $"There is no SQL files on path '{MigrationsPath}'";
+            Result.Message = $"There is no SQL files on path '{ScriptsPath}'";
             return Result;
         }
         Result.SuccessFiles = new string[files.Length];
@@ -64,7 +64,7 @@ public abstract class MigrationHelperBase : IDbMigrator
         for(int i = 0; i < files.Length; i++)
         {
             var fileName = Path.GetFileName(files[i]);
-            if (connection.QueryFirstOrDefault(GetMigration(files[i])) is null)
+            if (await HasMigration(connection, files[i]))
             {
                 using var transaction = connection.BeginTransaction();
                 try
@@ -110,22 +110,37 @@ public abstract class MigrationHelperBase : IDbMigrator
         return sql.Split(';', StringSplitOptions.RemoveEmptyEntries);
     }
 
-    private async Task CreateMigrationsTable(IDbConnection connection)
+    protected virtual async Task CreateMigrationsTable(IDbConnection connection)
     {
-        await connection.ExecuteAsync(CreateMigrationsTableSQL);
+        var sql = @"
+            CREATE TABLE IF NOT EXISTS Migrations (
+                Id Text PRIMARY KEY
+            );
+        ";
+        await connection.ExecuteAsync(sql);
     }
 
-    private async Task InsertMigration(IDbConnection connection, string file)
+    protected virtual async Task InsertMigration(IDbConnection connection, string id)
     {
-        await connection.ExecuteAsync(InsertMigrationSQL(file));
+        var sql = @"
+            INSERT INTO Migrations (Id)
+            VALUES(
+                @Id
+            );
+        ";
+        await connection.ExecuteAsync(sql, new {Id = id});
     }
 
-    protected abstract string CreateMigrationsTableSQL { get; set; }
+    protected virtual async Task<bool> HasMigration(IDbConnection connection, string id)
+    {
+        var sql = @"
+            SELECT Id 
+            FROM Migrations
+            WHERE Id = @Id;
+        ";
+
+        return await connection.QueryFirstOrDefaultAsync(sql, new {Id = id}) is not null;
+    }
 
     protected abstract IDbConnection CreateConnection();
-
-    protected abstract string GetMigration(string id);
-
-    protected abstract string InsertMigrationSQL(string id);
-
 }
