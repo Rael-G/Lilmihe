@@ -33,7 +33,7 @@ using ILoggerFactory factory = LoggerFactory.Create(builder => builder.AddConsol
 ILogger logger = factory.CreateLogger("DbUpInBox");
 factory.Dispose();
 
-IDbMigrator migrator;
+MigrationHelper migrator;
 try
 {
     migrator = MigratorInjector.Inject(dbms, connectionString, scriptsPath);

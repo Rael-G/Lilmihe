@@ -4,7 +4,7 @@ namespace Lilmihe;
 
 public static class MigratorInjector
 {
-    public static IDbMigrator Inject(string dbms, string connectionString, string scriptsPath)
+    public static MigrationHelper Inject(string dbms, string connectionString, string scriptsPath)
     { 
         return dbms switch
         {
