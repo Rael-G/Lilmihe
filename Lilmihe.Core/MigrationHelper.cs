@@ -4,24 +4,22 @@ using Dapper;
 
 namespace Lilmihe;
 
-public abstract class MigrationHelperBase : IDbMigrator
+public class MigrationHelper : IDbMigrator
 {
-    protected readonly string ConnectionString;
+    protected readonly IDbConnection Connection;
 
     private readonly string ScriptsPath;
 
     private readonly MigrationResult Result = new();
 
-    public MigrationHelperBase(string scriptsPath, string connectionString)
+    public MigrationHelper(string scriptsPath, IDbConnection connection)
     {
         ScriptsPath = scriptsPath;
-        ConnectionString = connectionString;
+        Connection = connection;
     }
 
     public async Task<MigrationResult> Migrate()
     {
-        using var connection = CreateConnection();
-
         var files = Directory.GetFiles(ScriptsPath, "*.sql");
         Array.Sort(files);
         if (files.Length < 1)
@@ -31,47 +29,51 @@ public abstract class MigrationHelperBase : IDbMigrator
         }
         Result.SuccessFiles = new string[files.Length];
 
-        try
+        using (Connection)
         {
-            connection.Open();
-        }
-        catch(DbException e)
-        {
-            Result.Error = e;
-            Result.Message = "Error when trying to establish connection";
+            if (Connection.State != ConnectionState.Open)
+                try
+                {
+                    Connection.Open();
+                }
+                catch(DbException e)
+                {
+                    Result.Error = e;
+                    Result.Message = "Error when trying to establish connection";
+                    return Result;
+                }
+
+            await CreateMigrationsTable();
+
+            try
+            {
+                await ExecuteFiles(files);
+            }
+            catch(DbException)
+            {
+                return Result;
+            }
+
+            Result.Success = true;
+            if (Result.SuccessFiles.Length == 0)
+                Result.Message = "Everything is up to date";
             return Result;
         }
-
-        await CreateMigrationsTable(connection);
-
-        try
-        {
-            await ExecuteFiles(connection, files);
-        }
-        catch(DbException)
-        {
-            return Result;
-        }
-
-        Result.Success = true;
-        if (Result.SuccessFiles.Length == 0)
-            Result.Message = "Everything is up to date";
-        return Result;
     }
 
-    private async Task ExecuteFiles(IDbConnection connection, string[] files)
+    private async Task ExecuteFiles(string[] files)
     {   
         for(int i = 0; i < files.Length; i++)
         {
             var fileName = Path.GetFileName(files[i]);
-            if (await HasMigration(connection, files[i]))
+            if (await HasMigration(files[i]))
             {
-                using var transaction = connection.BeginTransaction();
+                using var transaction = Connection.BeginTransaction();
                 try
                 {
                     var commands = ReadCommandsFromFile(files[i]);
-                    await ExecuteCommands(connection, commands);
-                    await InsertMigration(connection, fileName);
+                    await ExecuteCommands(commands);
+                    await InsertMigration(fileName);
                 }
                 catch(DbException)
                 {
@@ -86,13 +88,13 @@ public abstract class MigrationHelperBase : IDbMigrator
         }
     }
 
-    private async Task ExecuteCommands(IDbConnection connection, string[] commands)
+    private async Task ExecuteCommands(string[] commands)
     {
         foreach(var command in commands)
         {
             try
             {
-                await connection.ExecuteAsync(command);
+                await Connection.ExecuteAsync(command);
             }
             catch (DbException e)
             {
@@ -110,17 +112,17 @@ public abstract class MigrationHelperBase : IDbMigrator
         return sql.Split(';', StringSplitOptions.RemoveEmptyEntries);
     }
 
-    protected virtual async Task CreateMigrationsTable(IDbConnection connection)
+    protected virtual async Task CreateMigrationsTable()
     {
         var sql = @"
             CREATE TABLE IF NOT EXISTS Migrations (
                 Id Text PRIMARY KEY
             );
         ";
-        await connection.ExecuteAsync(sql);
+        await Connection.ExecuteAsync(sql);
     }
 
-    protected virtual async Task InsertMigration(IDbConnection connection, string id)
+    protected virtual async Task InsertMigration(string id)
     {
         var sql = @"
             INSERT INTO Migrations (Id)
@@ -128,10 +130,10 @@ public abstract class MigrationHelperBase : IDbMigrator
                 @Id
             );
         ";
-        await connection.ExecuteAsync(sql, new {Id = id});
+        await Connection.ExecuteAsync(sql, new {Id = id});
     }
 
-    protected virtual async Task<bool> HasMigration(IDbConnection connection, string id)
+    protected virtual async Task<bool> HasMigration(string id)
     {
         var sql = @"
             SELECT Id 
@@ -139,8 +141,6 @@ public abstract class MigrationHelperBase : IDbMigrator
             WHERE Id = @Id;
         ";
 
-        return await connection.QueryFirstOrDefaultAsync(sql, new {Id = id}) is not null;
+        return await Connection.QueryFirstOrDefaultAsync(sql, new {Id = id}) is not null;
     }
-
-    protected abstract IDbConnection CreateConnection();
 }
