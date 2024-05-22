@@ -1,4 +1,4 @@
-﻿namespace DbUpInBox;
+﻿namespace Lilmihe;
 
 public interface IDbMigrator
 {

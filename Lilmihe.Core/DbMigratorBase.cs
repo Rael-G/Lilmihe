@@ -1,7 +1,7 @@
 using Microsoft.Extensions.Logging;
 using DbUp.Engine;
 
-namespace DbUpInBox;
+namespace Lilmihe;
 
 public abstract class DbMigratorBase(ILogger logger, string connectionString) : IDbMigrator
 {

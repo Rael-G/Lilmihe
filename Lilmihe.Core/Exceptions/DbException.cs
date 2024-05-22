@@ -1,6 +1,6 @@
 using System.Diagnostics;
 
-namespace DbUpInBox;
+namespace Lilmihe;
 
 [DebuggerDisplay($"{{{nameof(DebuggerDisplay)}(),nq}}")]
 public class DbException : System.Data.Common.DbException
