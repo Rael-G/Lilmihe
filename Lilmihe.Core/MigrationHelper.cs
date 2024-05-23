@@ -4,7 +4,7 @@ using Dapper;
 
 namespace Lilmihe;
 
-public class MigrationHelper : IDbMigrator
+public class MigrationHelper
 {
     protected readonly IDbConnection Connection;
 
@@ -20,13 +20,24 @@ public class MigrationHelper : IDbMigrator
 
     public async Task<MigrationResult> Migrate()
     {
-        var files = Directory.GetFiles(ScriptsPath, "*.sql");
-        Array.Sort(files);
+        string[] files = [];
+        try
+        {
+            files = Directory.GetFiles(ScriptsPath, "*.sql");
+        }
+        catch(DirectoryNotFoundException e)
+        {
+            Result.Error = e;
+            return Result;
+        }
+
         if (files.Length < 1)
         {
             Result.Message = $"There is no SQL files on path '{ScriptsPath}'";
             return Result;
         }
+
+        Array.Sort(files);
         Result.SuccessFiles = new string[files.Length];
 
         using (Connection)
@@ -66,7 +77,7 @@ public class MigrationHelper : IDbMigrator
         for(int i = 0; i < files.Length; i++)
         {
             var fileName = Path.GetFileName(files[i]);
-            if (await HasMigration(files[i]))
+            if (!await HasMigration(files[i]))
             {
                 using var transaction = Connection.BeginTransaction();
                 try
@@ -82,7 +93,7 @@ public class MigrationHelper : IDbMigrator
                     throw;
                 }
 
-                Result.SuccessFiles[i] = files[i];
+                Result.SuccessFiles[i] = fileName;
                 transaction.Commit();
             }
         }

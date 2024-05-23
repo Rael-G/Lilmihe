@@ -4,9 +4,9 @@ public class MigrationResult
 {
     public bool Success { get; set; } = false;
 
-    public string? FailedCommand { get; set; } = string.Empty;
+    public string? FailedCommand { get; set; }
 
-    public string? FailedFile { get; set; } = string.Empty;
+    public string? FailedFile { get; set; }
 
     public string[] SuccessFiles { get; set; } = [];
 
