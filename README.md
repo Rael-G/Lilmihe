@@ -1,10 +1,10 @@
-# DbUpInBox
-DbUpInBox is a command-line utility for managing and automating database migrations. The utility utilizes the DbUp library for handling migrations and provides a user-friendly console interface. You can also use its .Core + .Database packages standalone in you program.
+# Little Migration Helper
+## Overview
+The Migration Helper is a utility designed to assist in managing and executing database migration scripts written in SQL. This tool is especially useful for applying a series of SQL scripts to a database in a specific order, ensuring that all necessary migrations are applied only once and that the database is kept up to date.
 
-Original DbUp description 
->DbUp is a set of .NET libraries that helps you to deploy changes to different databases like SQL Server. It tracks which SQL scripts have been run already, >and runs the change scripts that are needed to get your database up to date.
-
-## Getting Started
-* Connection String Input: Users are prompted to input their database connection string, ensuring a secure and customizable setup.  
-* DBMS Selection: Choose the desired Database Management System (DBMS) from the available options. Currently, only PostgreSQL is supported.  
-* Script Execution: Specify the path to your SQL scripts, allowing DbUpInBox to execute the necessary changes to your database schema.
+## Features
+* Automated Script Execution: Automatically detects and executes SQL scripts located in a specified directory.
+* Transaction Management: Executes each script within a transaction to ensure atomicity. If an error occurs, changes are rolled back to maintain database integrity.
+* Migration Tracking: Keeps track of applied migrations using a dedicated table in the database to avoid reapplying the same script.
+* Error Handling: Captures and reports errors encountered during the migration process, including specific commands and files that failed.
+* Customizable: Allows customization of the migration process through virtual methods that can be overridden in derived classes.
