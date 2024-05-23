@@ -8,7 +8,7 @@ public class MigrationResult
 
     public string? FailedFile { get; set; }
 
-    public string[] SuccessFiles { get; set; } = [];
+    public List<string> SuccessFiles { get; set; } = [];
 
     public string Message { get; set; } = string.Empty;
 

@@ -20,7 +20,7 @@ public class MigrationHelper
 
     public async Task<MigrationResult> Migrate()
     {
-        string[] files = [];
+        string[] files;
         try
         {
             files = Directory.GetFiles(ScriptsPath, "*.sql");
@@ -38,7 +38,6 @@ public class MigrationHelper
         }
 
         Array.Sort(files);
-        Result.SuccessFiles = new string[files.Length];
 
         using (Connection)
         {
@@ -66,7 +65,7 @@ public class MigrationHelper
             }
 
             Result.Success = true;
-            if (Result.SuccessFiles.Length == 0)
+            if (Result.SuccessFiles.Count == 0)
                 Result.Message = "Everything is up to date";
             return Result;
         }
@@ -74,15 +73,15 @@ public class MigrationHelper
 
     private async Task ExecuteFiles(string[] files)
     {   
-        for(int i = 0; i < files.Length; i++)
+        foreach(var file in files)
         {
-            var fileName = Path.GetFileName(files[i]);
-            if (!await HasMigration(files[i]))
+            var fileName = Path.GetFileName(file);
+            if (!await HasMigration(fileName))
             {
                 using var transaction = Connection.BeginTransaction();
                 try
                 {
-                    var commands = ReadCommandsFromFile(files[i]);
+                    var commands = ReadCommandsFromFile(file);
                     await ExecuteCommands(commands);
                     await InsertMigration(fileName);
                 }
@@ -93,7 +92,7 @@ public class MigrationHelper
                     throw;
                 }
 
-                Result.SuccessFiles[i] = fileName;
+                Result.SuccessFiles.Add(fileName);
                 transaction.Commit();
             }
         }

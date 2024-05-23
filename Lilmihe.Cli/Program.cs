@@ -36,7 +36,7 @@ public partial class Program
         if ( dbms < 0 || string.IsNullOrEmpty(connectionString) || string.IsNullOrEmpty(scriptsPath))
         {
             Console.WriteLine("Missing required arguments. Please provide a DBMS option, --connection-string, and --path.");
-            return 0;
+            return -1;
         }
 
         var migrator = MigratorInjector.Inject(dbms, connectionString, scriptsPath);
@@ -55,21 +55,20 @@ public partial class Program
 
         var successMessage = string.Empty;
         var failMessage = string.Empty;
-        if (result.Success || result.SuccessFiles.Length > 0)
-            successMessage += Messages.MIGRATION_SUCCESS + "\n";
+        if (result.Success || result.SuccessFiles.Count > 0)
+            successMessage += Messages.MIGRATION_SUCCESS;
 
-        if (result.SuccessFiles.Length > 0)
+        if (result.SuccessFiles.Count > 0)
         {
-            successMessage += "Scripts:\n";
+            successMessage += "\nScripts:";
             foreach (var file in result.SuccessFiles)
             {
-                successMessage += file + "\n";
+                successMessage += "\n" + file;
             }
-            successMessage += "\n";
         }
         else if (result.Success)
         {
-            successMessage += result.Message +="\n";
+            successMessage += "\n" + result.Message;
         }
 
         if (!string.IsNullOrEmpty(successMessage))
@@ -77,11 +76,11 @@ public partial class Program
 
         if(!result.Success)
         {
-            failMessage +=  Messages.MIGRATION_ERROR + "\n";
-            failMessage += !string.IsNullOrEmpty(result.Message)? result.Message + "\n" : string.Empty;
-            failMessage += (result.FailedFile != null)? "Failed File:\n" + result.FailedFile : string.Empty;
-            failMessage += (result.FailedCommand != null)? "Failed Command:\n" + result.FailedCommand : string.Empty;
-            failMessage += (result.Error != null)? "Error:\n" + result.Error.Message : string.Empty;
+            failMessage += Messages.MIGRATION_ERROR;
+            failMessage += !string.IsNullOrEmpty(result.Message)? "\n" + result.Message : string.Empty;
+            failMessage += (result.FailedFile != null)? "\nFailed File: " + result.FailedFile : string.Empty;
+            failMessage += (result.FailedCommand != null)? "\nFailed Command: " + result.FailedCommand : string.Empty;
+            failMessage += (result.Error != null)? "\nError: " + result.Error.Message : string.Empty;
         }
 
         if (!string.IsNullOrEmpty(failMessage))
