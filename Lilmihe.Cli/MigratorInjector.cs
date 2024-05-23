@@ -1,4 +1,4 @@
-using Microsoft.Extensions.Logging;
+using Microsoft.Data.Sqlite;
 
 namespace Lilmihe;
 
@@ -8,6 +8,7 @@ public static class MigratorInjector
     { 
         return dbms switch
         {
+            "sqlite" => new MigrationHelper(scriptsPath, new SqliteConnection(connectionString)),
             _ => throw new ArgumentException
                 ($"{dbms} is an invalid DBMS option. Please provide a valid DataBase Management System name as an argument."),
         };

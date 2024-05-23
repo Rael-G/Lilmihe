@@ -7,7 +7,7 @@ var dbms = string.Empty;
 while (string.IsNullOrEmpty(dbms))
 {
     Console.WriteLine("Type your DBMS:");
-    Console.WriteLine("Options are <postgresql> <sqlserver>");
+    Console.WriteLine("Options are <sqlite>");
     dbms = Console.ReadLine()?? string.Empty;
 }
 
@@ -71,7 +71,7 @@ if (!string.IsNullOrEmpty(successMessage))
 if(!result.Success)
 {
     failMessage +=  Messages.MIGRATION_ERROR + "\n";
-    failMessage += result.Message + "\n";
+    failMessage += !string.IsNullOrEmpty(result.Message)? result.Message + "\n" : string.Empty;
     failMessage += (result.FailedFile != null)? "Failed File:\n" + result.FailedFile : string.Empty;
     failMessage += (result.FailedCommand != null)? "Failed Command:\n" + result.FailedCommand : string.Empty;
     failMessage += (result.Error != null)? "Error:\n" + result.Error.Message : string.Empty;
