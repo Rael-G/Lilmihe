@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lilmihe.Cli", "Lilmihe.Cli\Lilmihe.Cli.csproj", "{41D1693A-431E-424A-9461-732F4F97C30B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lilmihe.Tool", "src\Lilmihe.Tool\Lilmihe.Tool.csproj", "{41D1693A-431E-424A-9461-732F4F97C30B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lilmihe.Core", "Lilmihe.Core\Lilmihe.Core.csproj", "{41C6EFAC-EC3D-4FE1-9593-736209BC675A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lilmihe.Core", "src\Lilmihe.Core\Lilmihe.Core.csproj", "{41C6EFAC-EC3D-4FE1-9593-736209BC675A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
