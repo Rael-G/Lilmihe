@@ -1,5 +1,6 @@
 ﻿using System.CommandLine;
 using Lilmihe;
+using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Logging;
 
 public partial class Program
@@ -30,21 +31,16 @@ public partial class Program
 
     public static async Task<int> Run(string connectionString, string scriptsPath, bool sqlite)
     {
-        var dbms = -1;
-        if (sqlite) dbms = MigratorInjector.Sqlite;
+        MigrationHelper? migrator = null;
+        if (sqlite) 
+            migrator = new MigrationHelper(scriptsPath, new SqliteConnection(connectionString));
 
-        if ( dbms < 0 || string.IsNullOrEmpty(connectionString) || string.IsNullOrEmpty(scriptsPath))
+        if ( migrator is null || string.IsNullOrEmpty(connectionString) || string.IsNullOrEmpty(scriptsPath))
         {
             Console.WriteLine("Missing required arguments. Please provide a DBMS option, --connection-string, and --path.");
             return -1;
         }
 
-        var migrator = MigratorInjector.Inject(dbms, connectionString, scriptsPath);
-        return await RunMigration(migrator);
-    }
-
-    public static async Task<int> RunMigration(MigrationHelper migrator)
-    {
         Console.WriteLine(Messages.TITLE);
 
         using ILoggerFactory factory = LoggerFactory.Create(builder => builder.AddConsole());
