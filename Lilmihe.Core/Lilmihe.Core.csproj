@@ -5,9 +5,25 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+    
+  <PropertyGroup>
+    <PackageId>Lilmihe</PackageId>
+    <Authors>Israel Galvan</Authors>
+    <Version>1.0.0</Version>
+    <Product>Lilmihe</Product>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseFile>LICENCE.txt</PackageLicenseFile>
+    <RepositoryUrl></RepositoryUrl>
+    <PackageProjectUrl></PackageProjectUrl>
+    <PackageTags></PackageTags>
+    <Description></Description>
+
+  </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Dapper" Version="2.1.35" />
+    <None Include="../README.md" Pack="true" PackagePath="/"/>
+    <None Include="../LICENSE.txt" Pack="true" PackagePath="LICENCE.txt"/>
   </ItemGroup>
 
 </Project>
