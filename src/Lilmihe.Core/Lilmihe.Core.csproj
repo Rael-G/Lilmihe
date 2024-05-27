@@ -7,23 +7,25 @@
   </PropertyGroup>
     
   <PropertyGroup>
-    <PackageId>Lilmihe</PackageId>
+    <PackageId>Lilmihe.Core</PackageId>
     <Authors>Israel Galvan</Authors>
     <Version>1.0.0</Version>
     <Product>Lilmihe</Product>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseFile>LICENCE.txt</PackageLicenseFile>
-    <RepositoryUrl></RepositoryUrl>
-    <PackageProjectUrl></PackageProjectUrl>
-    <PackageTags></PackageTags>
-    <Description></Description>
+    <RepositoryUrl>https://github.com/Rael-G/Lilmihe</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/Rael-G/Lilmihe</PackageProjectUrl>
+    <PackageTags>Migration, SQLite, Postgres, SQLServer, Oracle, MySQL</PackageTags>
+    <Description>
+      Lilmihe is a versatile database migration tool designed to simplify the process of applying SQL scripts to a database.
+    </Description>
 
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Dapper" Version="2.1.35" />
-    <None Include="../README.md" Pack="true" PackagePath="/"/>
-    <None Include="../LICENSE.txt" Pack="true" PackagePath="LICENCE.txt"/>
+    <None Include="../../README.md" Pack="true" PackagePath="/"/>
+    <None Include="../../LICENSE.txt" Pack="true" PackagePath="LICENCE.txt"/>
   </ItemGroup>
 
 </Project>
