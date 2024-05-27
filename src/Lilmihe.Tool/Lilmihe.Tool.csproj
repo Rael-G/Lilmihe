@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../Lilmihe.Core/Lilmihe.Core.csproj" />
+    <ProjectReference Include="../Lilmihe.Lib/Lilmihe.Lib.csproj" />
   </ItemGroup>
 
 </Project>
