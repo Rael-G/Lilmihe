@@ -12,7 +12,7 @@ Lilmihe is a versatile database migration tool designed to simplify the process 
 To use Lilmihe as a library in your .NET project, install the NuGet package:
 
 ```bash
-dotnet add package Lilmihe
+dotnet add package Lilmihe.Lib
 ```
 
 ## Building the Tool from the Source Code
