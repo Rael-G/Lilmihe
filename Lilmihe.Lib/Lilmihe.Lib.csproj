@@ -8,7 +8,7 @@
   <PropertyGroup>
     <PackageId>Lilmihe.Lib</PackageId>
     <Authors>Israel Galvan</Authors>
-    <Version>1.0.1</Version>
+    <Version>1.0.2</Version>
     <Product>Lilmihe</Product>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseFile>LICENCE.txt</PackageLicenseFile>
@@ -23,8 +23,8 @@
 
   <ItemGroup>
     <PackageReference Include="Dapper" Version="2.1.35" />
-    <None Include="../../README.md" Pack="true" PackagePath="/" />
-    <None Include="../../LICENSE.txt" Pack="true" PackagePath="LICENCE.txt" />
+    <None Include="../README.md" Pack="true" PackagePath="/" />
+    <None Include="../LICENSE.txt" Pack="true" PackagePath="LICENCE.txt" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
   </ItemGroup>
 
