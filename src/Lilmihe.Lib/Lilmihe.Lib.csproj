@@ -1,8 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
+    <TargetFramework>netstandard2.1</TargetFramework>
     <Nullable>enable</Nullable>
   </PropertyGroup>
     
@@ -24,8 +23,9 @@
 
   <ItemGroup>
     <PackageReference Include="Dapper" Version="2.1.35" />
-    <None Include="../../README.md" Pack="true" PackagePath="/"/>
-    <None Include="../../LICENSE.txt" Pack="true" PackagePath="LICENCE.txt"/>
+    <None Include="../../README.md" Pack="true" PackagePath="/" />
+    <None Include="../../LICENSE.txt" Pack="true" PackagePath="LICENCE.txt" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
   </ItemGroup>
 
 </Project>

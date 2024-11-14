@@ -1,16 +1,20 @@
-﻿namespace Lilmihe;
+﻿using System;
+using System.Collections.Generic;
 
-public class MigrationResult
+namespace Lilmihe
 {
-    public bool Success { get; set; } = false;
+    public class MigrationResult
+    {
+        public bool Success { get; set; } = false;
 
-    public string? FailedCommand { get; set; }
+        public string? FailedCommand { get; set; }
 
-    public string? FailedFile { get; set; }
+        public string? FailedFile { get; set; }
 
-    public List<string> SuccessFiles { get; set; } = [];
+        public List<string> SuccessFiles { get; set; } = new List<string>();
 
-    public string Message { get; set; } = string.Empty;
+        public string Message { get; set; } = string.Empty;
 
-    public Exception? Error { get; set; }
+        public Exception? Error { get; set; }
+    }
 }
