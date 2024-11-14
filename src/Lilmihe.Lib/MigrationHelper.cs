@@ -85,8 +85,8 @@ namespace Lilmihe
                     try
                     {
                         var commands = ReadCommandsFromFile(file);
-                        await ExecuteCommands(commands);
-                        await InsertMigration(fileName);
+                        await ExecuteCommands(commands, transaction);
+                        await InsertMigration(fileName, transaction);
                     }
                     catch(DbException)
                     {
@@ -101,13 +101,13 @@ namespace Lilmihe
             }
         }
 
-        private async Task ExecuteCommands(string[] commands)
+        private async Task ExecuteCommands(string[] commands, IDbTransaction? transaction)
         {
             foreach(var command in commands)
             {
                 try
                 {
-                    await Connection.ExecuteAsync(command);
+                    await Connection.ExecuteAsync(command, transaction);
                 }
                 catch (DbException e)
                 {
@@ -135,7 +135,7 @@ namespace Lilmihe
             await Connection.ExecuteAsync(sql);
         }
 
-        protected virtual async Task InsertMigration(string id)
+        protected virtual async Task InsertMigration(string id, IDbTransaction? transaction)
         {
             var sql = @"
             INSERT INTO Migrations (Id)
@@ -143,7 +143,7 @@ namespace Lilmihe
                 @Id
             );
         ";
-            await Connection.ExecuteAsync(sql, new {Id = id});
+            await Connection.ExecuteAsync(sql, new {Id = id}, transaction);
         }
 
         protected virtual async Task<bool> HasMigration(string id)
